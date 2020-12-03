@@ -1,8 +1,9 @@
+#!/bin/python
 import time, datetime
 import pandas as pd
 
 # Extracted from: https://www.nature.com/articles/s41599-020-0523-3#Sec7 [Supplementary information]
-dj30_df = pd.read_csv('../data/dj30.csv') 
+dj30_df = pd.read_csv('./dj30.csv') 
 dj30_df.dropna(inplace=True)
 dj30_df = dj30_df.loc[:,['Date', 'Close']]
 dj30 = dj30_df['Close'].tolist()

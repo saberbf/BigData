@@ -61,4 +61,4 @@ for feed in feeds:
 titles = []
 for feed in feeds:
     for (tt, name, title, link) in feed.getHeadline():
-        print title
+        print(title)
