@@ -1,7 +1,10 @@
+#!/usr/bin/env python3
 import time, datetime
 import pandas as pd
 
 import re
+import os
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 def pre_process(text):
     # lowercase
@@ -20,7 +23,7 @@ def tolist(text):
     return text.split()
 
 # Extracted from: https://www.nature.com/articles/s41599-020-0523-3#Sec7 [Supplementary information]
-hdlines_df = pd.read_csv('2020-headlines.csv') 
+hdlines_df = pd.read_csv(os.path.dirname(dir_path) + '/data/2020-headlines.csv')
 hdlines_df.dropna(inplace=True)
 hdlines_df.drop(columns=['SNO', 'Website'], inplace=True)
 hdlines_df
@@ -46,4 +49,4 @@ def topn(wordsFreq, n):
     return sorted(wordsFreq.items(), key=lambda k_v: k_v[1], reverse=True)[:n]
 
 understood_words = set([word for word in wordsFreq.keys() if wordsFreq[word] > 1])
-
+print ('collected %d-word newsworthy vocabulary' % len(understood_words))

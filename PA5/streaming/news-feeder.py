@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+import sys
 import feedparser, time, datetime
 import pandas as pd
 
@@ -61,4 +63,5 @@ for feed in feeds:
 titles = []
 for feed in feeds:
     for (tt, name, title, link) in feed.getHeadline():
-        print(title)
+        print (title, flush = True)
+
