@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import time, datetime
 import pandas as pd
+import mmh3
 
 import re
 import os
@@ -52,20 +53,29 @@ understood_words = set([word for word in wordsFreq.keys() if wordsFreq[word] > 1
 print ('collected %d-word newsworthy vocabulary' % len(understood_words))
 
 
-from bloomfilter import BloomFilter
 
 # number of elements to add to the buffer
 items_count = len(understood_words) 
 filter_size = 8 * items_count
 hash_count = 6
+bloomf = [0] * filter_size
 
-bloomf = BloomFilter(items_count, filter_size, hash_count)
+def bloomf_add(item):
+    '''
+    Add an item to the bloom filter
+    '''
+    for seed in range(hash_count):
+        # the mmh3.hash() function hashes the input string 
+        # to hash_count many different bits with different seeds
+        bloomf[mmh3.hash(item, seed) % filter_size] = 1
+    return
 
-print("Size of bit array:{}".format(bloomf.size))
-print("Number of hash functions:{}".format(bloomf.hash_count))
+
+print("Size of bit array:{}".format(filter_size))
+print("Number of hash functions:{}".format(hash_count))
 
 for word in understood_words:
-    bloomf.add(word)
+    bloomf_add(word)
 
 with open(os.path.dirname(dir_path) + '/streaming/bloom.txt', 'w') as file:
-    file.write(''.join(map(str, bloomf.bit_array)))
+    file.write(''.join(map(str, bloomf)))
