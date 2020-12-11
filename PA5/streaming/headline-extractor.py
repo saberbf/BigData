@@ -50,3 +50,22 @@ def topn(wordsFreq, n):
 
 understood_words = set([word for word in wordsFreq.keys() if wordsFreq[word] > 1])
 print ('collected %d-word newsworthy vocabulary' % len(understood_words))
+
+
+from bloomfilter import BloomFilter
+
+# number of elements to add to the buffer
+items_count = len(understood_words) 
+filter_size = 8 * items_count
+hash_count = 6
+
+bloomf = BloomFilter(items_count, filter_size, hash_count)
+
+print("Size of bit array:{}".format(bloomf.size))
+print("Number of hash functions:{}".format(bloomf.hash_count))
+
+for word in understood_words:
+    bloomf.add(word)
+
+with open(os.path.dirname(dir_path) + '/streaming/bloom.txt', 'w') as file:
+    file.write(''.join(map(str, bloomf.bit_array)))
